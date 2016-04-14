@@ -34,26 +34,27 @@ int __cdecl wmain(int argc, wchar_t *argv[])
 	FILE *fp = NULL;
 	unsigned char *buffer = NULL;
 	unsigned int i, len;
+	unsigned short first2;
 	errno_t result;
 	size_t read;
 	wchar_t wc;
 
 	if (argc < 2)
 	{
-		_putws(L"Usage: ROT13 inputfile\n");
+		_putws(L"Usage: ROT13 inputfile");
 		return 0;
 	}
 
 	result = _wfopen_s(&fp, argv[1], L"r+");
 	if (result != 0)
 	{
-		wprintf_s(L"Error occured when opening \'%s\'. Ensure that your user account has access to open this file.\n", argv[1], errno);
+		wprintf_s(L"Error occured when opening \'%s\'. Ensure that your user account has access to open this file.\n", argv[1]);
 		return -1;
 	}
 
 
 	// print to stderr in case user is piping rotation output to a file
-	fputws(L"WARNING: This program is meant for educational purposes only; it is not meant to be used as a serious cryptographic tool. ROT13 is trivially breakable.\n", stderr);
+	fputws(L"WARNING: This program is meant for educational purposes only. ROT13 is a .\n", stderr);
 
 	fseek(fp, 0, SEEK_END);
 	len = ftell(fp);
@@ -65,6 +66,13 @@ int __cdecl wmain(int argc, wchar_t *argv[])
 
 	fclose(fp);
 	fp = NULL;
+
+	first2 = *(buffer + 0) | (*(buffer + 1) << 8);
+	if (first2 == 0xFFFE || first2 == 0xFEFF || first2 == 0xBBEF || first2 == 0xEFBB)
+	{
+		fputws(L"ERROR: This program only supports ANSI text files.\n", stderr);
+		return 0;
+	}
 
 	for (i = 0; i < read; i++)
 	{
