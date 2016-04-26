@@ -54,7 +54,7 @@ int __cdecl wmain(int argc, wchar_t *argv[])
 
 
 	// print to stderr in case user is piping rotation output to a file
-	fputws(L"WARNING: This program is meant for educational purposes only. ROT13 is a .\n", stderr);
+	fputws(L"WARNING: This program is meant for educational purposes only. ROT13 is not a secure cryptographic algorithm.\n", stderr);
 
 	fseek(fp, 0, SEEK_END);
 	len = ftell(fp);
